@@ -1,14 +1,3 @@
-# Artificial Neural Network
-
-# Installing Theano
-# pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
-
-# Installing Tensorflow
-# Install Tensorflow from the website: https://www.tensorflow.org/versions/r0.12/get_started/os_setup.html
-
-# Installing Keras
-# pip install --upgrade keras
-
 # Part 1 - Data Preprocessing
 
 # Importing the libraries
@@ -16,11 +5,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+print("modules have been imported")
+
 # Importing the dataset
-dataset = pd.read_csv('./Churn_Modelling.csv')
+dataset = pd.read_csv('Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 
+print("dataset has been read")
+                
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X_1 = LabelEncoder()
@@ -32,9 +25,13 @@ onehotencoder = OneHotEncoder(categorical_features = [1])
 X = onehotencoder.fit_transform(X).toarray()
 X = X[:, 1:]
 
+print('dataset has been label encoded')
+
 # Splitting the dataset into the Training set and Test set
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+print('train test split done')
 
 # Feature Scaling
 from sklearn.preprocessing import StandardScaler
@@ -42,85 +39,63 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-## Part 2 - Make the ANN!
+print('feature scaling is done')
+
+## Part 2 - Make the ANN
 
 ## Importing the Keras libraries and packages
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 
+print('Imported the Keras libraries and classes')
+
 ## Initialising the ANN
 classifier = Sequential()
 
 ## Adding the input layer and the first hidden layer
+# units - no of nodes in a layer
+# input_dim - no of dimensions of dataset
+# kernel_initializer - a fuction to initialise the weights
+# activation - activation function for the nodes
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-classifier.add(Dropout(p = 0.1))
+classifier.add(Dropout(rate = 0.1))
 
 ## Adding the second hidden layer
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-classifier.add(Dropout(p = 0.1))
+classifier.add(Dropout(rate = 0.1))
 
 ## Adding the output layer
 classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
 
 ## Compiling the ANN
+# optimizer = type of stochastic gradient descent
+# loss - cost function (binary, categorical)
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
+print('starting training')
 ## Fitting the ANN to the Training set
 classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+print('training done')
 
-# Part 3 - Making the predictions and evaluating the model
-
+# Making the predictions 
+print('Making the predictions on X_test')
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
 y_pred = (y_pred > 0.5)
 
-# single customer prediction
+
+#single customer prediction
+print('Making a single prediction')
 new_pred = classifier.predict(sc.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
 new_pred = (new_pred > 0.5)
 
+## Evaluating the model
+
 # Making the Confusion Matrix
+print('Making the Confusion Matrix')
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
-
-## Evaluating the ANN
-from keras.wrappers.scikit_learn import KerasClassifier
-from sklearn.cross_validation import cross_val_score 
-
-def build_classifier():
-  classifier = Sequential()
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-  classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
-  classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-  return classifier
-
-classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100 )
-accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
-mean = accuracies.mean()
-variance = accuracies.std()
-
-## Improving the ANN
-# dropout regularisation to reduce overfitting 
+print(cm)
 
 
-## Tuning the ANN
-from sklearn.model_selection import GridSearchCV
-
-def build_classifier(optimizer):
-  classifier = Sequential()
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-  classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
-  classifier.compile(optimizer = optimizer, loss = 'binary_crossentropy', metrics = ['accuracy'])
-  return classifier
-
-classifier = KerasClassifier(build_fn = build_classifier)
-parameters = { 'batch_size': [25, 32], 
-               'epochs': [100, 500],
-               'optimizer': ['adam', 'rmsprop'] }
-
-grid_search = GridSearchCV(estimator = classifier, param_grid = parameters, scoring = 'accuracy', cv = 10)
-grid_search = grid_search.fit(X_train, y_train)
-best_parameters = grid_search.best_params_
-best_accuracy = grid_search.best_score_
