@@ -68,7 +68,7 @@ def build_classifier():
 
 # create a scikit-wrapped classifier 
 print("create a scikit-wrapped classifier")
-classifier = KerasClassifier(build_fn = build_classifier, batch_size = 32, epochs = 500 )
+classifier = KerasClassifier(build_fn = build_classifier, batch_size = 32, epochs = 500)
 accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
 print('evaluation of ann:')
 mean = accuracies.mean()
