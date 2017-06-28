@@ -76,6 +76,8 @@ print(best_parameters)
 print('best accuracy :')
 print(best_accuracy)
 
+# mean: 0.858375
+# variance: 0.0102018687014
 
 #best parameters :
 # {'optimizer': 'adam', 'epochs': 500, 'dropout_rate': 0.1, 'units': 15, 'batch_size': 32}
