@@ -58,9 +58,9 @@ from sklearn.model_selection import cross_val_score
 print("create keras classifier")
 def build_classifier():
   classifier = Sequential()
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+  classifier.add(Dense(units = 15, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
   classifier.add(Dropout(rate = 0.1))
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+  classifier.add(Dense(units = 15, kernel_initializer = 'uniform', activation = 'relu'))
   classifier.add(Dropout(rate = 0.1))
   classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
   classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
@@ -68,7 +68,12 @@ def build_classifier():
 
 # create a scikit-wrapped classifier 
 print("create a scikit-wrapped classifier")
-classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100 )
+classifier = KerasClassifier(build_fn = build_classifier, batch_size = 32, epochs = 500 )
 accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
+print('evaluation of ann:')
 mean = accuracies.mean()
+print('mean: ')
+print(mean)
 variance = accuracies.std()
+print('variance: ')
+print(variance)

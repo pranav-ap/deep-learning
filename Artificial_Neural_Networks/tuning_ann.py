@@ -48,21 +48,25 @@ print('Imported the Keras libraries and classes')
 
 # create keras classifier
 print("create keras classifier")
-def build_classifier(optimizer):
+def build_classifier(optimizer, units, dropout_rate):
   classifier = Sequential()
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-  classifier.add(Dropout(rate = 0.1))
-  classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-  classifier.add(Dropout(rate = 0.1))
+  classifier.add(Dense(units = units, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+  classifier.add(Dropout(rate = dropout_rate))
+  classifier.add(Dense(units = units, kernel_initializer = 'uniform', activation = 'relu'))
+  classifier.add(Dropout(rate = dropout_rate))
   classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
   classifier.compile(optimizer = optimizer, loss = 'binary_crossentropy', metrics = ['accuracy'])
   return classifier
 
 classifier = KerasClassifier(build_fn = build_classifier)
-parameters = { 'batch_size': [25, 32], 
-               'epochs': [5, 10, 50, 100],
-               'optimizer': ['adam', 'rmsprop'] }
+parameters = { 'batch_size': [32],
+               'epochs': [500],
+               'optimizer': ['adam'],
+               'units': [6, 15],
+               'dropout_rate': [0.1, 0.2]
+            }
 
+print('starting grid search')
 grid_search = GridSearchCV(estimator = classifier, param_grid = parameters, scoring = 'accuracy', cv = 10)
 grid_search = grid_search.fit(X_train, y_train)
 best_parameters = grid_search.best_params_
@@ -72,3 +76,10 @@ print(best_parameters)
 print('best accuracy :')
 print(best_accuracy)
 
+# mean - 0.836375
+# variance - 0.0115305301266
+
+#best parameters :
+#{'optimizer': 'adam', 'batch_size': 32, 'units': 15, 'epochs': 500}
+#best accuracy :
+#0.855375
