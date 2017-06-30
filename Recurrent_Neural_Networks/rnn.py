@@ -34,6 +34,7 @@ from keras.layers import LSTM
 regressor = Sequential()
 
 # Adding the input layer and the LSTM layer
+# input_shape = (No of timesteps, no of features)
 regressor.add(LSTM(units = 4, activation = 'sigmoid', input_shape = (None, 1)))
 
 # Adding the output layer

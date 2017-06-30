@@ -91,3 +91,4 @@ plt.show()
 import math
 from sklearn.metrics import mean_squared_error
 rmse = math.sqrt(mean_squared_error(real_stock_price, predicted_stock_price))
+# rmse / 800 <- avg value of stock prices
