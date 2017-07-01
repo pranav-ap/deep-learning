@@ -22,6 +22,7 @@ y_train = []
 for i in range(20, 1258):
     X_train.append(training_set_scaled[i-20:i, 0])
     y_train.append(training_set_scaled[i, 0])
+
 X_train, y_train = np.array(X_train), np.array(y_train)
 
 # Reshaping
