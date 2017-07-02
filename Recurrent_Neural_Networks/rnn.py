@@ -4,7 +4,7 @@
 
 # Importing the libraries
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 
 # Importing the training set
@@ -82,10 +82,10 @@ print(' rmse / 800 : ') # 800 <- avg value of stock prices
 print(rmse/800) 
 
 # Visualising the results
-#plt.plot(real_stock_price[1258:], color = 'red', label = 'Real Google Stock Price')
-#plt.plot(predicted_stock_price, color = 'blue', label = 'Predicted Google Stock Price')
-#plt.title('Google Stock Price Prediction')
-#plt.xlabel('Time')
-#plt.ylabel('Google Stock Price')
-#plt.legend()
-#plt.show()
+plt.plot(real_stock_price[1258:], color = 'red', label = 'Real Google Stock Price')
+plt.plot(predicted_stock_price, color = 'blue', label = 'Predicted Google Stock Price')
+plt.title('Google Stock Price Prediction')
+plt.xlabel('Time')
+plt.ylabel('Google Stock Price')
+plt.legend()
+plt.show()
