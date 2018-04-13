@@ -77,3 +77,4 @@ print(mean)
 variance = accuracies.std()
 print('variance: ')
 print(variance)
+

@@ -1,5 +1,3 @@
-# Part 1 - Data Preprocessing
-
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
@@ -84,11 +82,10 @@ print('Making the predictions on X_test')
 y_pred = classifier.predict(X_test)
 y_pred = (y_pred > 0.5)
 
-
 #single customer prediction
-print('Making a single prediction')
-new_pred = classifier.predict(sc.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
-new_pred = (new_pred > 0.5)
+#print('Making a single prediction')
+#new_pred = classifier.predict(sc.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
+#new_pred = (new_pred > 0.5)
 
 ## Evaluating the model
 
